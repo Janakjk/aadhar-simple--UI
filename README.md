@@ -1,36 +1,15 @@
-Built a complete React frontend app (Vite) with routes for register, login, forgot-password, and chat.
-Added Registration UI with fields: username, Aadhaar number, email, password, confirm password (with password match check).
-Added Forgot Password UI with username/email + OTP input (demo verification placeholder).
-Added Chat UI with:
-left-side user list (app menu),
-message history box,
-message input + send button,
-logout button.
-Added placeholder sections for:
-frontend message encryption/decryption,
-Aadhaar verification.
-Integrated Keycloak auth:
-auth provider/context setup,
-protected chat route,
-login now Keycloak-only.
-senderId for messages now comes from Keycloak token (sub fallback to preferred_username), not manual input.
-Integrated backend endpoints:
-POST /send with MessageDTO in body,
-GET /fetch/new/messages?userId=...,
-GET /fetch/messages with both user IDs as query params.
-Added API base URL support through env (VITE_API_BASE_URL) with default http://localhost:8080.
-Improved chat behavior:
-sent messages show instantly in UI (optimistic update),
-backend fetch merges messages without wiping local ones.
-Functional right now
-App runs on localhost with working pages and navigation.
-Keycloak login button and session-based route protection are wired.
-Chat send action calls /send with proper JSON body.
-Fetch calls for new and conversation messages are wired.
-Messages appear immediately when sent from UI.
-Lint/build are passing successfully.
-Still placeholder / pending backend logic
-Registration submit is UI-only (no backend registration call yet).
-Forgot password OTP verification is UI demo only.
-Aadhaar verification section is placeholder.
-Encryption/decryption logic is placeholder.
+1. Built a React frontend app using Vite with routes for register, login, forgot password, and chat.
+2. Integrated Keycloak authentication with auth provider, protected chat route, and login handled only by Keycloak.
+3. Extracted senderId from Keycloak token using sub (fallback to preferred_username).
+4. Created registration UI with username, Aadhaar, email, password, and confirm password with validation.
+5. Created forgot password UI with username/email and OTP input (demo only).
+6. Built chat UI with user list, message history, input box, send button, and logout.
+7. Added optimistic UI so messages appear instantly when sent.
+8. Integrated backend APIs: POST /send, GET /fetch/new/messages, GET /fetch/messages.
+9. Managed API base URL using VITE_API_BASE_URL.
+10. Ensured messages sync with backend without removing local messages.
+11. Added placeholders for encryption/decryption and Aadhaar verification.
+12. Application runs locally with working navigation and Keycloak login.
+13. Chat functionality works with API calls and instant UI updates.
+14. Linting and build are passing successfully.
+15. Registration, OTP verification, Aadhaar check, and encryption are not yet implemented.
