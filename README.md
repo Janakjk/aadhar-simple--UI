@@ -1,16 +1,36 @@
-# React + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Built a complete React frontend app (Vite) with routes for register, login, forgot-password, and chat.
+Added Registration UI with fields: username, Aadhaar number, email, password, confirm password (with password match check).
+Added Forgot Password UI with username/email + OTP input (demo verification placeholder).
+Added Chat UI with:
+left-side user list (app menu),
+message history box,
+message input + send button,
+logout button.
+Added placeholder sections for:
+frontend message encryption/decryption,
+Aadhaar verification.
+Integrated Keycloak auth:
+auth provider/context setup,
+protected chat route,
+login now Keycloak-only.
+senderId for messages now comes from Keycloak token (sub fallback to preferred_username), not manual input.
+Integrated backend endpoints:
+POST /send with MessageDTO in body,
+GET /fetch/new/messages?userId=...,
+GET /fetch/messages with both user IDs as query params.
+Added API base URL support through env (VITE_API_BASE_URL) with default http://localhost:8080.
+Improved chat behavior:
+sent messages show instantly in UI (optimistic update),
+backend fetch merges messages without wiping local ones.
+Functional right now
+App runs on localhost with working pages and navigation.
+Keycloak login button and session-based route protection are wired.
+Chat send action calls /send with proper JSON body.
+Fetch calls for new and conversation messages are wired.
+Messages appear immediately when sent from UI.
+Lint/build are passing successfully.
+Still placeholder / pending backend logic
+Registration submit is UI-only (no backend registration call yet).
+Forgot password OTP verification is UI demo only.
+Aadhaar verification section is placeholder.
+Encryption/decryption logic is placeholder.
