@@ -49,6 +49,21 @@ export function AuthProvider({ children }) {
     return keycloak.login()
   }
 
+  const getAccessToken = async () => {
+    if (!keycloak) {
+      return ''
+    }
+    try {
+      await keycloak.updateToken(30)
+      return keycloak.token || ''
+    } catch {
+      setError('Session expired. Please login again.')
+      setAuthenticated(false)
+      setUser(null)
+      return ''
+    }
+  }
+
   const logout = () => {
     if (!keycloak) {
       setAuthenticated(false)
@@ -66,6 +81,7 @@ export function AuthProvider({ children }) {
       error,
       hasKeycloakConfig,
       login,
+      getAccessToken,
       logout,
     }),
     [loading, authenticated, user, error],

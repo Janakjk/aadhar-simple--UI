@@ -12,30 +12,49 @@ async function parseResponse(response) {
   return response.text()
 }
 
-export async function sendMessageApi(messageDto) {
+function getAuthHeaders(accessToken) {
+  if (!accessToken) {
+    throw new Error('Missing Keycloak access token.')
+  }
+
+  return {
+    Authorization: `Bearer ${accessToken}`,
+  }
+}
+
+export async function sendMessageApi(messageDto, accessToken) {
   const response = await fetch(`${API_BASE_URL}/send`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      ...getAuthHeaders(accessToken),
     },
     body: JSON.stringify(messageDto),
   })
   return parseResponse(response)
 }
 
-export async function fetchNewMessagesApi(userId) {
+export async function fetchNewMessagesApi(userId, accessToken) {
   const params = new URLSearchParams({ userId })
-  const response = await fetch(`${API_BASE_URL}/fetch/new/messages?${params.toString()}`)
+  const response = await fetch(`${API_BASE_URL}/fetch/new/messages?${params.toString()}`, {
+    headers: {
+      ...getAuthHeaders(accessToken),
+    },
+  })
   return parseResponse(response)
 }
 
-export async function fetchMessagesBetweenUsersApi(senderId, receiverId) {
+export async function fetchMessagesBetweenUsersApi(senderId, receiverId, accessToken) {
   const params = new URLSearchParams({
     senderId,
     receiverId,
     userId1: senderId,
     userId2: receiverId,
   })
-  const response = await fetch(`${API_BASE_URL}/fetch/messages?${params.toString()}`)
+  const response = await fetch(`${API_BASE_URL}/fetch/messages?${params.toString()}`, {
+    headers: {
+      ...getAuthHeaders(accessToken),
+    },
+  })
   return parseResponse(response)
 }

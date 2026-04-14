@@ -11,7 +11,7 @@ const USERS = ['Aarav', 'Diya', 'Vikram', 'Maya', 'Priya']
 
 function ChatPage() {
   const navigate = useNavigate()
-  const { logout, user } = useAuth()
+  const { logout, user, authenticated, getAccessToken } = useAuth()
   const [activeUser, setActiveUser] = useState(USERS[0])
   const [chatInput, setChatInput] = useState('')
   const [messagesByUser, setMessagesByUser] = useState({})
@@ -46,6 +46,10 @@ function ChatPage() {
   }, [toTextMessage])
 
   const sendMessage = async () => {
+    if (!authenticated) {
+      setApiStatus('You are not authenticated with Keycloak.')
+      return
+    }
     if (!currentUserId) {
       setApiStatus('No Keycloak user id found. Please login again.')
       return
@@ -67,7 +71,8 @@ function ChatPage() {
     setChatInput('')
 
     try {
-      await sendMessageApi(messageDto)
+      const accessToken = await getAccessToken()
+      await sendMessageApi(messageDto, accessToken)
       setApiStatus('Message sent.')
     } catch (err) {
       setApiStatus(
@@ -91,7 +96,8 @@ function ChatPage() {
         return
       }
       try {
-        const data = await fetchNewMessagesApi(currentUserId)
+        const accessToken = await getAccessToken()
+        const data = await fetchNewMessagesApi(currentUserId, accessToken)
         if (!ignore) {
           mergeMessages(activeUser, data)
           setApiStatus('Fetched new messages after login.')
@@ -107,7 +113,7 @@ function ChatPage() {
     return () => {
       ignore = true
     }
-  }, [activeUser, currentUserId, mergeMessages])
+  }, [activeUser, currentUserId, getAccessToken, mergeMessages])
 
   useEffect(() => {
     let ignore = false
@@ -117,7 +123,8 @@ function ChatPage() {
         return
       }
       try {
-        const data = await fetchMessagesBetweenUsersApi(currentUserId, activeUser)
+        const accessToken = await getAccessToken()
+        const data = await fetchMessagesBetweenUsersApi(currentUserId, activeUser, accessToken)
         if (!ignore) {
           mergeMessages(activeUser, data)
           setApiStatus(`Loaded messages between ${currentUserId} and ${activeUser}.`)
@@ -133,7 +140,7 @@ function ChatPage() {
     return () => {
       ignore = true
     }
-  }, [activeUser, currentUserId, mergeMessages])
+  }, [activeUser, currentUserId, getAccessToken, mergeMessages])
 
   return (
     <div className="chat-page">
